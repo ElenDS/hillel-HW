@@ -1,9 +1,9 @@
 <?php
 declare(strict_types=1);
 class Color {
-    public int $red;
-    public int $green;
-    public int $blue;
+    private int $red;
+    private int $green;
+    private int $blue;
     public function __construct(int $red, int $green, int $blue)
     {
         $this->red = $this->setColor($red);
