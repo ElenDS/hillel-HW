@@ -7,6 +7,7 @@ namespace App\myClasses;
 abstract class Model
 {
     public static int $count = 0;
+
     public static function find(int $id): static
     {
         $obj = new static();
@@ -17,8 +18,8 @@ abstract class Model
 
     protected function create(): string
     {
-        self::$count++;
-        return 'INSERT INTO ' . static::class . ' (id, name, email) VALUES ( ' . self::$count . ', ' . $this->name . ', ' . $this->email . ')';
+        $idNewObj = ++self::$count;
+        return 'INSERT INTO ' . static::class . ' (id, name, email) VALUES (' . $idNewObj . ', ' . $this->name . ', ' . $this->email . ')';
     }
 
     protected function update(): string
