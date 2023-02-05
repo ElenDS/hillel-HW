@@ -16,7 +16,7 @@ abstract class Model
 
     public function save(): string
     {
-        if ($this->id) {
+        if (isset($this->id)) {
             $sql = 'UPDATE user SET name = ' . $this->name . ' email = "email" WHERE id = ' . $this->id;
         } else {
             $sql = 'INSERT INTO user (id, name, email) VALUES (:id, ' . $this->name . ', ' . $this->email . ')';

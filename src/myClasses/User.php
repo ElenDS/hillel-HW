@@ -9,7 +9,7 @@ final class User extends Model
     /**
      * @var int
      */
-    protected $id;
+    protected int $id;
     /**
      * @var string
      */
