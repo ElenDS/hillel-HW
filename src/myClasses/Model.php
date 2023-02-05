@@ -6,20 +6,32 @@ namespace App\myClasses;
 
 abstract class Model
 {
+    public static int $count = 0;
     public static function find(int $id): static
     {
         $obj = new static();
         $obj->id = $id;
-        echo 'SELECT * FROM user WHERE id = ' . $id . PHP_EOL;
+        echo 'SELECT * FROM ' . static::class . ' WHERE id = ' . $id . PHP_EOL;
         return $obj;
+    }
+
+    protected function create(): string
+    {
+        self::$count++;
+        return 'INSERT INTO ' . static::class . ' (id, name, email) VALUES ( ' . self::$count . ', ' . $this->name . ', ' . $this->email . ')';
+    }
+
+    protected function update(): string
+    {
+        return 'UPDATE ' . static::class . ' SET name = ' . $this->name . ' email = "email" WHERE id = ' . $this->id;
     }
 
     public function save(): string
     {
         if (isset($this->id)) {
-            $sql = 'UPDATE user SET name = ' . $this->name . ' email = "email" WHERE id = ' . $this->id;
+            $sql = $this->update();
         } else {
-            $sql = 'INSERT INTO user (id, name, email) VALUES (:id, ' . $this->name . ', ' . $this->email . ')';
+            $sql = $this->create();
         }
 
         return $sql;
