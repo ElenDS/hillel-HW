@@ -1,24 +1,26 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App;
 
-use App\myClasses\Money;
-use Exception;
+use App\myClasses\User;
 
-require_once '../autoloader.php';
+require_once '../vendor/autoload.php';
 
-$loader = new Psr4AutoloaderClass();
-$loader->register();
-$loader->addNamespace('App\\', '../src');
 
-$currencyDKK = new Money(20.5, 'DKK');
-$currencyEUR = new Money(50, 'EUR');
-echo $currencyDKK->equals($currencyEUR) . '<br>';
-try{
-    $currencyDKK->add($currencyEUR);
-}
-catch (Exception $e){
-    echo $e->getMessage() . '<br>';
-}
-echo $currencyDKK->getAmount() . '<br>';
+$user = User::find(1);
+var_dump($user); // SELECT * FROM user WHERE id = :id
 
+$user->setName('John');
+$result = $user->save();
+var_dump($result); // UPDATE user SET name = :name, email = 'email' WHERE id = :id
+
+$result = $user->delete();
+var_dump($result); // DELETE user WHERE id = :id
+
+$user = new User();
+$user->setName('John');
+$user->setEmail('some@gmail.com');
+$result = $user->save();
+var_dump($result); // INSERT INTO user (id, name, email) VALUES (:id, :name, :email)
