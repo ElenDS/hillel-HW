@@ -6,25 +6,43 @@ namespace App\myClasses;
 
 abstract class Model
 {
-    public static int $count = 0;
-
     public static function find(int $id): static
     {
+        $col = implode(', ', array_keys(get_class_vars(static::class)));
         $obj = new static();
         $obj->id = $id;
-        echo 'SELECT * FROM ' . static::class . ' WHERE id = ' . $id . PHP_EOL;
+        echo 'SELECT ' . $col . ' FROM ' . static::getTableName() . ' WHERE id = ' . $id . PHP_EOL;
         return $obj;
+    }
+
+
+    protected static function getTableName(): string
+    {
+        return explode('\\', static::class)[2];
     }
 
     protected function create(): string
     {
-        $idNewObj = ++self::$count;
-        return 'INSERT INTO ' . static::class . ' (id, name, email) VALUES (' . $idNewObj . ', ' . $this->name . ', ' . $this->email . ')';
+        $keys = array_keys(get_object_vars($this));
+        $values = array_values(get_object_vars($this));
+        $col = implode(', ', $keys);
+        $vars = implode(', ', $values);
+        return 'INSERT INTO ' . static::getTableName() . ' (' . $col . ') VALUES (' . $vars . ')';
     }
+
 
     protected function update(): string
     {
-        return 'UPDATE ' . static::class . ' SET name = ' . $this->name . ' email = "email" WHERE id = ' . $this->id;
+        $arrSql = [];
+        foreach (get_object_vars($this) as $key => $value) {
+            if ($key === 'id') {
+                continue;
+            }
+            $arrSql[] = $key . ' = ' . $value;
+        }
+        $sql = implode(', ', $arrSql);
+
+        return 'UPDATE ' . static::getTableName() . ' SET ' . $sql . ' WHERE id = ' . $this->id;
     }
 
     public function save(): string
@@ -40,6 +58,6 @@ abstract class Model
 
     public function delete(): string
     {
-        return 'DELETE user WHERE id = ' . $this->id;
+        return 'DELETE FROM ' . static::getTableName() . ' WHERE id = ' . $this->id;
     }
 }

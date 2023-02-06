@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App;
 
 use App\myClasses\User;
+use App\myClasses\Blog;
 
 require_once '../vendor/autoload.php';
 
@@ -24,3 +25,20 @@ $user->setName('John');
 $user->setEmail('some@gmail.com');
 $result = $user->save();
 var_dump($result); // INSERT INTO user (id, name, email) VALUES (:id, :name, :email)
+
+$blog = Blog::find(2);
+var_dump($blog);
+
+$blog->setTitle('New title');
+$result = $blog->save();
+var_dump($result);
+
+$result = $blog->delete();
+var_dump($result);
+
+$blog = new Blog();
+$blog->setAuthor('Smith');
+$blog->setTitle('Healthy Lifestyle');
+$blog->setCategory('health');
+$result = $blog->save();
+var_dump($result);
