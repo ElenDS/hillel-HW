@@ -11,23 +11,16 @@ abstract class Model
         $col = implode(', ', array_keys(get_class_vars(static::class)));
         $obj = new static();
         $obj->id = $id;
-        echo 'SELECT ' . $col . ' FROM ' . static::getTableName() . ' WHERE id = ' . $id . PHP_EOL;
+        echo 'SELECT ' . $col . ' FROM ' . explode('\\', static::class)[2] . ' WHERE id = ' . $id . PHP_EOL;
         return $obj;
     }
 
 
-    protected static function getTableName(): string
-    {
-        return explode('\\', static::class)[2];
-    }
-
     protected function create(): string
     {
-        $keys = array_keys(get_object_vars($this));
-        $values = array_values(get_object_vars($this));
-        $col = implode(', ', $keys);
-        $vars = implode(', ', $values);
-        return 'INSERT INTO ' . static::getTableName() . ' (' . $col . ') VALUES (' . $vars . ')';
+        $col = implode(', ', array_keys(get_object_vars($this)));
+        $vars = implode(', ', array_values(get_object_vars($this)));
+        return 'INSERT INTO ' . explode('\\', static::class)[2] . ' (' . $col . ') VALUES (' . $vars . ')';
     }
 
 
@@ -42,7 +35,7 @@ abstract class Model
         }
         $sql = implode(', ', $arrSql);
 
-        return 'UPDATE ' . static::getTableName() . ' SET ' . $sql . ' WHERE id = ' . $this->id;
+        return 'UPDATE ' . explode('\\', static::class)[2] . ' SET ' . $sql . ' WHERE id = ' . $this->id;
     }
 
     public function save(): string
@@ -58,6 +51,6 @@ abstract class Model
 
     public function delete(): string
     {
-        return 'DELETE FROM ' . static::getTableName() . ' WHERE id = ' . $this->id;
+        return 'DELETE FROM ' . explode('\\', static::class)[2] . ' WHERE id = ' . $this->id;
     }
 }
