@@ -11,7 +11,6 @@ use App\Model\Tag;
 require_once '../vendor/autoload.php';
 require_once '../config/eloquent.php';
 
-
 Category::upsert([
     ['title' => 'Finance'],
     ['title' => 'Policy'],
@@ -40,7 +39,6 @@ Post::upsert([
     ['title' => 'Tenth Post Title', 'content' => 'some text', 'category_id' => 2]
 ], ['title', 'content', 'category_id'], ['title']);
 
-
 $post = Post::find(1);
 $post->title = 'Fist Post Title Was Edited';
 $post->content = 'content was changed';
@@ -48,7 +46,6 @@ $post->category_id = 3;
 $post->save();
 
 $post->delete();
-
 
 Tag::upsert([
     ['name' => 'news'],
@@ -63,11 +60,8 @@ Tag::upsert([
     ['name' => 'environment']
 ], ['name'], ['name']);
 
-
 $posts = Post::all();
 $tags = Tag::all();
 $posts->map(function ($post) use ($tags) {
     $post->tags()->attach($tags->random(3));
 });
-
-
