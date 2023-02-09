@@ -4,41 +4,70 @@ declare(strict_types=1);
 
 namespace App;
 
-use App\myClasses\User;
-use App\myClasses\Blog;
+use App\Model\Category;
+use App\Model\Post;
+use App\Model\Tag;
 
 require_once '../vendor/autoload.php';
+require_once '../config/eloquent.php';
 
 
-$user = User::find(1);
-var_dump($user); // SELECT * FROM user WHERE id = :id
+Category::upsert([
+    ['title' => 'Finance'],
+    ['title' => 'Policy'],
+    ['title' => 'Medicine'],
+    ['title' => 'Education'],
+    ['title' => 'Science']
+], ['title'], ['title']);
 
-$user->setName('John');
-$result = $user->save();
-var_dump($result); // UPDATE user SET name = :name, email = 'email' WHERE id = :id
+$categoryUpdate = Category::find(1);
+$categoryUpdate->title = 'Finance and Business';
+$categoryUpdate->save();
 
-$result = $user->delete();
-var_dump($result); // DELETE user WHERE id = :id
+$category = Category::find(2);
+$category->delete();
 
-$user = new User();
-$user->setName('John');
-$user->setEmail('some@gmail.com');
-$result = $user->save();
-var_dump($result); // INSERT INTO user (id, name, email) VALUES (:id, :name, :email)
+Post::upsert([
+    ['title' => 'First Post Title', 'content' => 'some text', 'category_id' => 2],
+    ['title' => 'Second Post Title', 'content' => 'some text', 'category_id' => 2],
+    ['title' => 'Third Post Title', 'content' => 'some text', 'category_id' => 2],
+    ['title' => 'Fourth Post Title', 'content' => 'some text', 'category_id' => 2],
+    ['title' => 'Fifth Post Title', 'content' => 'some text', 'category_id' => 2],
+    ['title' => 'Sixth Post Title', 'content' => 'some text', 'category_id' => 2],
+    ['title' => 'Seventh Post Title', 'content' => 'some text', 'category_id' => 2],
+    ['title' => 'Eighth Post Title', 'content' => 'some text', 'category_id' => 2],
+    ['title' => 'Ninth Post Title', 'content' => 'some text', 'category_id' => 2],
+    ['title' => 'Tenth Post Title', 'content' => 'some text', 'category_id' => 2]
+], ['title', 'content', 'category_id'], ['title']);
 
-$blog = Blog::find(2);
-var_dump($blog);
 
-$blog->setTitle('New title');
-$result = $blog->save();
-var_dump($result);
+$post = Post::find(1);
+$post->title = 'Fist Post Title Was Edited';
+$post->content = 'content was changed';
+$post->category_id = 3;
+$post->save();
 
-$result = $blog->delete();
-var_dump($result);
+$post->delete();
 
-$blog = new Blog();
-$blog->setAuthor('Smith');
-$blog->setTitle('Healthy Lifestyle');
-$blog->setCategory('health');
-$result = $blog->save();
-var_dump($result);
+
+Tag::upsert([
+    ['name' => 'news'],
+    ['name' => 'news live'],
+    ['name' => 'china'],
+    ['name' => 'live today'],
+    ['name' => 'health'],
+    ['name' => 'advice'],
+    ['name' => 'student journey'],
+    ['name' => 'budget 2023'],
+    ['name' => 'personal loan'],
+    ['name' => 'environment']
+], ['name'], ['name']);
+
+
+$posts = Post::all();
+$tags = Tag::all();
+$posts->map(function ($post) use ($tags) {
+    $post->tags()->attach($tags->random(3));
+});
+
+
